@@ -1,0 +1,89 @@
+@using Microsoft.AspNetCore.Components;
+@inject NavigationManager navigationManager
+
+    <MatNavMenu Multi="true" Class="app-sidebar">
+        <MatNavSubMenu>
+            <MatNavSubMenuHeader>
+                <MatNavItem AllowSelection="false" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>monetization_on</MatIcon>
+                    <span class="miniHover"> Wrapping</span>
+                </MatNavItem>
+            </MatNavSubMenuHeader>
+            <MatNavSubMenuList>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("Wrapping/wrapping_balance").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>account_balance</MatIcon> <span class="miniHover">Wrapping Balance</span>
+                </MatNavItem>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("Wrapping/wrap_unwrap_token").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>swap_horiz</MatIcon> <span class="miniHover">Wrap/Unwrap Tokens</span>
+                </MatNavItem>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("Wrapping/wrapping_history").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>history</MatIcon> <span class="miniHover">Wrapping History</span>
+                </MatNavItem>
+            </MatNavSubMenuList>
+        </MatNavSubMenu>
+
+        <MatNavSubMenu>
+            <MatNavSubMenuHeader>
+                <MatNavItem AllowSelection="false" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>pie_chart</MatIcon>
+                    <span class="miniHover"> Index Composition</span>
+                </MatNavItem>
+            </MatNavSubMenuHeader>
+            <MatNavSubMenuList>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("IndexComposition/index_list").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>list</MatIcon> <span class="miniHover">Index List</span>
+                </MatNavItem>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("IndexComposition/index_creation").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>create</MatIcon> <span class="miniHover">Index Creation</span>
+                </MatNavItem>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("IndexComposition/add_erc20").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>add</MatIcon> <span class="miniHover">Add New ERC20</span>
+                </MatNavItem>
+            </MatNavSubMenuList>
+        </MatNavSubMenu>
+
+        <MatNavSubMenu>
+            <MatNavSubMenuHeader>
+                <MatNavItem AllowSelection="false" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>add_shopping_cart</MatIcon>@*insert_chart_outlined*@
+                    <span class="miniHover"> Index Marketplace</span>
+                </MatNavItem>
+            </MatNavSubMenuHeader>
+            <MatNavSubMenuList>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("IndexMarketplace/issue_redeem_index").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>swap_vert</MatIcon> <span class="miniHover">Issue/Redeem Index</span>
+                </MatNavItem>
+                <MatNavItem Href="@navigationManager.ToAbsoluteUri("IndexMarketplace/index_history").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+                    <MatIcon>history</MatIcon> <span class="miniHover">Index History</span>
+                </MatNavItem>
+            </MatNavSubMenuList>
+        </MatNavSubMenu>
+
+        <MatNavItem Href="@navigationManager.ToAbsoluteUri("user_portofolio").AbsoluteUri" AllowSelection="false" Disabled="@(!IsLoggedIn)">
+            <MatIcon>account_balance_wallet</MatIcon> <span class="miniHover">My Portofolio</span>
+        </MatNavItem>
+    </MatNavMenu>
+
+@code {
+    public bool IsLoggedIn = false;
+
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        IsLoggedIn = false;
+        var user = (await authenticationStateTask).User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            IsLoggedIn = true;
+        }
+
+        if (user.IsInRole("Administrator"))
+        {
+            // Perform some action only available to users in the 'admin' role
+            //Console.WriteLine("Administrator");
+        }
+    }
+}
